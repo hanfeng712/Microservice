@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class UserInfoData implements Serializable{
     private Integer userid;
 
-    private String useraccount;
+    private String nickname;
 
     private String password;
 
@@ -31,12 +31,12 @@ public class UserInfoData implements Serializable{
         this.userid = userid;
     }
 
-    public String getUseraccount() {
-        return useraccount;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setUseraccount(String useraccount) {
-        this.useraccount = useraccount == null ? null : useraccount.trim();
+    public void setNickname(String useraccount) {
+        this.nickname = useraccount == null ? null : useraccount.trim();
     }
 
     public String getPassword() {

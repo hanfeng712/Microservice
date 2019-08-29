@@ -26,9 +26,11 @@ public interface UserInfo {
     UserInfo selectByAccount(@Param("useraccount") String useraccount);
     @Select("SELECT *FROM UserInfo WHERE userid=#{arg0}")
     UserInfoData selectByPrimaryKey(Integer userid);
+    @Select("SELECT *FROM UserInfo WHERE username=#{arg0}")
+    UserInfoData selectUserByAmount(String username);
     /**
      * 功能描述：更新对象
-     * @param UserInfoData
+     * @param UserInfo
      */
     @Options(useGeneratedKeys=true,keyProperty = "id",keyColumn = "id")
     @Update("<script> update UserInfo "

@@ -1,4 +1,4 @@
-package com.gaoxi.gaoxiuser.redis;
+package com.gaoxi.gaoxiredis.redis;
 
 import com.gaoxi.gaoxicommonservicefacade.dao.UserInfo;
 import com.gaoxi.gaoxicommonservicefacade.model.UserInfoData;

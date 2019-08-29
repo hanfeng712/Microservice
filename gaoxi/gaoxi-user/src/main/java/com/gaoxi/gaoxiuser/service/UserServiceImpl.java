@@ -1,4 +1,5 @@
 package com.gaoxi.gaoxiuser.service;
+
 import com.alibaba.dubbo.config.annotation.Service;
 import com.gaoxi.gaoxicommonservicefacade.dao.UserInfo;
 import com.gaoxi.gaoxicommonservicefacade.model.UserInfoData;
@@ -20,10 +21,11 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public UserInfoData selectUserByKey(int userid){
-        return userInfo.selectByPrimaryKey(userid);
+        UserInfoData userInfoData = userInfo.selectByPrimaryKey(userid);
+        return userInfoData;
     }
+    @Override
     public UserInfoData getUserByAmount(String username){
-        //TODO:return userInfo.selectUserByAmount(String username);
-        return userInfo.selectByPrimaryKey(111111);
+        return userInfo.selectUserByAmount(username);
     }
 }

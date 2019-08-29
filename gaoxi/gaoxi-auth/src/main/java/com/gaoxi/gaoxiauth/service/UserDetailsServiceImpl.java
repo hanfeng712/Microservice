@@ -1,5 +1,8 @@
 package com.gaoxi.gaoxiauth.service;
 
+import com.alibaba.dubbo.config.annotation.Reference;
+import com.gaoxi.gaoxicommonservicefacade.model.UserInfoData;
+import com.gaoxi.gaoxicommonservicefacade.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -9,7 +12,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,8 @@ import java.util.List;
 public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     ClientDetailsService clientDetailsService;
+    @Reference(version = "1.0.0", loadbalance = "roundrobin")
+    private UserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -42,16 +46,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (StringUtils.isEmpty(username)) {
             return null;
         }
-        //TODO:远程调用用户中心根据账号查询用户信息
-        /*
-        UserInfoData userext = null;
+
+        UserInfoData userext = userService.getUserByAmount(username);
         if(userext == null){
             //返回空给spring security表示用户不存在
-            System.out.println("333333333333333");
             return null;
-        }*/
+        }
         //这里暂时使用静态密码
-        String password =new BCryptPasswordEncoder().encode("123");
+        String password = userext.getPassword();//new BCryptPasswordEncoder().encode("123");
         List<String> user_permission = new ArrayList<>();
         user_permission.add("course_get_baseinfo");
         user_permission.add("course_find_pic");
