@@ -1,8 +1,10 @@
 package com.gaoxi.gaoxiauth.service;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSON;
-import com.gaoxi.gaoxicommonservicefacade.common.auth.response.AuthCode;
+import com.gaoxi.gaoxicommonservicefacade.RedisService.RedisAuthService;
 import com.gaoxi.gaoxicommonservicefacade.common.auth.ext.AuthToken;
+import com.gaoxi.gaoxicommonservicefacade.common.auth.response.AuthCode;
 import com.gaoxi.gaoxicommonservicefacade.common.exception.ExceptionCast;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +22,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 //import com.xuecheng.framework.client.XcServiceList;
 //import org.springframework.cloud.client.ServiceInstance;
@@ -37,11 +38,11 @@ public class AuthService {
     int tokenValiditySeconds;
     @Value("${auth.urlBase}")
     String urlBase;
-    //@Autowired
-    //TODO:LoadBalancerClient loadBalancerClient;
 
     @Autowired
     StringRedisTemplate stringRedisTemplate;
+    @Reference(version = "1.0.0", loadbalance = "roundrobin")
+    private RedisAuthService redisAuthService;
 
     @Autowired
     RestTemplate restTemplate;
@@ -75,31 +76,15 @@ public class AuthService {
      * @return
      */
     private boolean saveToken(String access_token,String content,long ttl){
-        String key = "user_token:" + access_token;
-        stringRedisTemplate.boundValueOps(key).set(content,ttl, TimeUnit.SECONDS);
-        Long expire = stringRedisTemplate.getExpire(key, TimeUnit.SECONDS);
-        return expire>0;
+        return redisAuthService.saveToken(access_token, content, ttl);
     }
     //删除token
     public boolean delToken(String access_token){
-        String key = "user_token:" + access_token;
-        stringRedisTemplate.delete(key);
-        return true;
+        return redisAuthService.delToken( access_token);
     }
     //从redis查询令牌
     public AuthToken getUserToken(String token){
-        String key = "user_token:" + token;
-        //从redis中取到令牌信息
-        String value = stringRedisTemplate.opsForValue().get(key);
-        //转成对象
-        try {
-            AuthToken authToken = JSON.parseObject(value, AuthToken.class);
-            return authToken;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-
+        return redisAuthService.getUserToken(token);
     }
     //申请令牌
     private AuthToken applyToken(String username, String password, String clientId, String clientSecret){
