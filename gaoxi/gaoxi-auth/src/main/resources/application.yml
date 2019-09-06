@@ -22,7 +22,7 @@ auth:
   tokenValiditySeconds: 1200
   clientId: XcWebApp
   clientSecret: XcWebApp
-  cookieDomain: xuecheng.com
+  cookieDomain: 127.0.0.1
   cookieMaxAge: -1
   urlBase: http://localhost:40400
 encrypt:

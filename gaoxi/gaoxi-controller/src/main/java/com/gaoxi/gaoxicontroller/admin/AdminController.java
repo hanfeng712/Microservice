@@ -16,8 +16,7 @@ public class AdminController {
     @RequestMapping("/hello")
     @ResponseBody
     public String hello(String name,String value){
-        System.out.println(name);
-        System.out.println(value);
+        System.out.println("=============hello=============");
         return "success";
     }
     @RequestMapping(value = "/Login")

@@ -26,6 +26,7 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public UserInfoData getUserByAmount(String username){
+        System.out.println("==========================================");
         return userInfo.selectUserByAmount(username);
     }
 }

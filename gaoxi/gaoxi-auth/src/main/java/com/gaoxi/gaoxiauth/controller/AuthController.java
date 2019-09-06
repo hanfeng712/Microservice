@@ -51,7 +51,6 @@ public class AuthController extends AuthControllerApi {
     @Override
     @PostMapping("/userlogin")
     public LoginResult login(LoginRequest loginRequest) {
-        System.out.println("========================");
         if(loginRequest == null || StringUtils.isEmpty(loginRequest.getUsername())){
             ExceptionCast.cast(AuthCode.AUTH_USERNAME_NONE);
         }
@@ -64,6 +63,8 @@ public class AuthController extends AuthControllerApi {
         String password = loginRequest.getPassword();
         System.out.println(clientId);
         System.out.println(clientSecret);
+        System.out.println(username);
+        System.out.println(password);
         //申请令牌
         AuthToken authToken =  authService.login(username,password,clientId,clientSecret);
 

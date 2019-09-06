@@ -1,14 +1,12 @@
 package com.gaoxi.gaoxicommonservicefacade.common.utils;
-
+/*
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
-/**
- * Created by mrt on 2018/5/25.
- */
+
 public class XcOauth2Util {
 
     public UserJwt getUserJwtFromHeader(HttpServletRequest request){
@@ -35,3 +33,4 @@ public class XcOauth2Util {
     }
 
 }
+*/
