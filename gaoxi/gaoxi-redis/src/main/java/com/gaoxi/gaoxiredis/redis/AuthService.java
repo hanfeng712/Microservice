@@ -41,18 +41,28 @@ public class AuthService implements RedisAuthService {
 
     //从redis查询令牌
     public AuthToken getUserToken(String token){
-        System.out.println("000000000000000000");
-        String key = "user_token:" + token;
+        System.out.println(token);
+        String key = token;//"user_token:" + token;
         //从redis中取到令牌信息
         String value = stringRedisTemplate.opsForValue().get(key);
+
         //转成对象
         try {
             AuthToken authToken = JSON.parseObject(value, AuthToken.class);
+            System.out.println("11111111111");
+            System.out.println(authToken);
             return authToken;
         } catch (Exception e) {
+            System.out.println("jjjjjjjjjjjjjj");
             e.printStackTrace();
             return null;
         }
-
+    }
+    public String getUserTokenString(String token){
+        System.out.println(token);
+        String key = token;//"user_token:" + token;
+        //从redis中取到令牌信息
+        String value = stringRedisTemplate.opsForValue().get(key);
+        return value;
     }
 }

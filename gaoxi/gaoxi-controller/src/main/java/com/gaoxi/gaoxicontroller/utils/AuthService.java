@@ -1,15 +1,19 @@
 package com.gaoxi.gaoxicontroller.utils;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.fastjson.JSON;
 import com.gaoxi.gaoxicommonservicefacade.RedisService.RedisAuthService;
 import com.gaoxi.gaoxicommonservicefacade.common.auth.ext.AuthToken;
 import com.gaoxi.gaoxicommonservicefacade.common.utils.CookieUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
+@Component
 public class AuthService {
+
     @Reference(version = "1.0.0", loadbalance = "roundrobin")
     private RedisAuthService redisAuthService;
     //从头取出jwt令牌
@@ -43,9 +47,14 @@ public class AuthService {
     //查询令牌的有效期
     public boolean getExpire(String access_token){
         String key = "user_token:"+access_token;
-        AuthToken expire = redisAuthService.getUserToken(key);
-        if (expire==null){
+        String value = redisAuthService.getUserTokenString(key);
+        if (value==null){
             return false;
+        }
+
+        try {
+            AuthToken authToken = JSON.parseObject(value, AuthToken.class);
+        } catch (Exception e) {
         }
         return true;
     }

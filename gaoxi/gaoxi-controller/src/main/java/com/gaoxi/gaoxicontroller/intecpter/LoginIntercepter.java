@@ -2,15 +2,22 @@ package com.gaoxi.gaoxicontroller.intecpter;
 
 import com.gaoxi.gaoxicommonservicefacade.common.utils.CookieUtil;
 
+import com.gaoxi.gaoxicommonservicefacade.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import com.gaoxi.gaoxicontroller.utils.AuthService;
+import org.springframework.beans.factory.annotation.Autowired;
 
-
+@Component
 public class LoginIntercepter implements HandlerInterceptor{
+    @Autowired
     private AuthService authService;
     /**
      * 进入controller方法之前
@@ -19,23 +26,14 @@ public class LoginIntercepter implements HandlerInterceptor{
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response, Object handler) throws Exception {
         System.out.println("LoginIntercepter------->preHandle");
-        if (this.authService==null){
-            this.authService = new AuthService();
-        }
+        //BeanFactory factory = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
+        //this.authService = (AuthService) factory.getBean("AuthService");
         //取cookie中的身份令牌
         String tokenFromCookie = authService.getTokenFromCookie(request);
         if(StringUtils.isEmpty(tokenFromCookie)){
             //拒绝访问
             access_denied();
             System.out.println("1111111111111111111111111111");
-            return false;
-        }
-        //从redis取出jwt的过期时间
-        boolean expire = authService.getExpire(tokenFromCookie);
-        if(expire==false){
-            System.out.println("33333333333333333333333333");
-            //拒绝访问
-            access_denied();
             return false;
         }
         //从header中取jwt
