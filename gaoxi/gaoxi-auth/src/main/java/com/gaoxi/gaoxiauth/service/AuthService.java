@@ -84,7 +84,18 @@ public class AuthService {
     }
     //从redis查询令牌
     public AuthToken getUserToken(String token){
-        return redisAuthService.getUserToken(token);
+        String key = "user_token:"+token;
+        String value = redisAuthService.getUserTokenString(key);
+        if (value==null){
+            return null;
+        }
+
+        try {
+            AuthToken authToken = JSON.parseObject(value, AuthToken.class);
+            return authToken;
+        } catch (Exception e) {
+        }
+        return null;
     }
     //申请令牌
     private AuthToken applyToken(String username, String password, String clientId, String clientSecret){

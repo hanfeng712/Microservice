@@ -42,7 +42,7 @@ public class AuthService implements RedisAuthService {
     //从redis查询令牌
     public AuthToken getUserToken(String token){
         System.out.println(token);
-        String key = token;//"user_token:" + token;
+        String key = "user_token:" + token;
         //从redis中取到令牌信息
         String value = stringRedisTemplate.opsForValue().get(key);
 

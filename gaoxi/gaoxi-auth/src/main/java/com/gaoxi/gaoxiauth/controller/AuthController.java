@@ -109,19 +109,24 @@ public class AuthController extends AuthControllerApi {
     @Override
     @GetMapping("/userjwt")
     public JwtResult userjwt() {
+        System.out.println("========userjwt==============");
         //取出cookie中的用户身份令牌
         String uid = getTokenFormCookie();
         if(uid == null){
+            System.out.println("========userjwt======1========");
             return new JwtResult(CommonCode.FAIL,null);
         }
-
+        System.out.println("========userjwt======2========");
+        System.out.println(uid);
         //拿身份令牌从redis中查询jwt令牌
         AuthToken userToken = authService.getUserToken(uid);
         if(userToken!=null){
             //将jwt令牌返回给用户
             String jwt_token = userToken.getJwt_token();
+            System.out.println("========userjwt======3========");
             return new JwtResult(CommonCode.SUCCESS,jwt_token);
         }
+        System.out.println("========userjwt======4========");
         return null;
     }
 
