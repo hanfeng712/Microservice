@@ -58,7 +58,7 @@ public interface UserInfo {
      *
      * **/
     //推荐使用#{}取值，不要用${},因为存在注入的风险
-    @Insert("INSERT INTO UserInfo(useraccount,password,power,idnumber) VALUES(#{useraccount}, #{password}, #{power}, #{idnumber})")
+    @Insert("INSERT INTO UserInfo(useraccount,password) VALUES(#{useraccount}, #{password} )")
     @Options(useGeneratedKeys=true, keyProperty="userid", keyColumn="userid")   //keyProperty java对象的属性；keyColumn表示数据库的字段
     int insertSelective(UserInfoData user);
     /**

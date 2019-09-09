@@ -1,6 +1,7 @@
 package com.gaoxi.gaoxiauth.controller;
 
 import com.gaoxi.gaoxiauth.service.AuthService;
+import com.gaoxi.gaoxiauth.utils.BCryptUtil;
 import com.gaoxi.gaoxicommonservicefacade.common.api.auth.AuthControllerApi;
 import com.gaoxi.gaoxicommonservicefacade.common.auth.ext.AuthToken;
 import com.gaoxi.gaoxicommonservicefacade.common.auth.request.LoginRequest;
@@ -11,6 +12,8 @@ import com.gaoxi.gaoxicommonservicefacade.common.base.response.CommonCode;
 import com.gaoxi.gaoxicommonservicefacade.common.base.response.ResponseResult;
 import com.gaoxi.gaoxicommonservicefacade.common.exception.ExceptionCast;
 import com.gaoxi.gaoxicommonservicefacade.common.utils.CookieUtil;
+import com.gaoxi.gaoxicommonservicefacade.common.utils.ImageCode;
+import com.gaoxi.gaoxicommonservicefacade.model.UserInfoData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +23,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -42,6 +47,7 @@ public class AuthController extends AuthControllerApi {
 
     @Autowired
     AuthService authService;
+
     @RequestMapping("/hello")
     @ResponseBody
     public String hello(){
@@ -50,7 +56,7 @@ public class AuthController extends AuthControllerApi {
     }
     @Override
     @PostMapping("/userlogin")
-    public LoginResult login(LoginRequest loginRequest) {
+    public LoginResult login(LoginRequest loginRequest,HttpSession session) {
         if(loginRequest == null || StringUtils.isEmpty(loginRequest.getUsername())){
             ExceptionCast.cast(AuthCode.AUTH_USERNAME_NONE);
         }
@@ -61,28 +67,45 @@ public class AuthController extends AuthControllerApi {
         String username = loginRequest.getUsername();
         //密码
         String password = loginRequest.getPassword();
-        System.out.println(clientId);
-        System.out.println(clientSecret);
-        System.out.println(username);
-        System.out.println(password);
-        //申请令牌
-        AuthToken authToken =  authService.login(username,password,clientId,clientSecret);
+        //验证码
+        String verifycode = loginRequest.getVerifycode();
+        String code = (String) session.getAttribute(ImageCode.CODENAME);
+        System.out.println(verifycode);
+        System.out.println(code);
+        if(verifycode!=null&&code!=null&&verifycode.equals(code)) {
+            System.out.println("=======================================");
+            //申请令牌
+            AuthToken authToken = authService.login(username, password, clientId, clientSecret);
 
-        //用户身份令牌
-        String access_token = authToken.getAccess_token();
-        //将令牌存储到cookie
-        this.saveCookie(access_token);
+            //用户身份令牌
+            String access_token = authToken.getAccess_token();
+            //将令牌存储到cookie
+            this.saveCookie(access_token);
 
-        return new LoginResult(CommonCode.SUCCESS,access_token);
+            return new LoginResult(CommonCode.SUCCESS, access_token);
+        }
+        return new LoginResult(CommonCode.VERIFY_FAIL, "");
     }
     @PostMapping("/userregister")
     public LoginResult register(LoginRequest loginRequest) {
         if(loginRequest == null || StringUtils.isEmpty(loginRequest.getUsername())){
             ExceptionCast.cast(AuthCode.AUTH_USERNAME_NONE);
         }
+        BCryptUtil bBCryptUtil = new BCryptUtil();
+        String passwordTmp = bBCryptUtil.encode(loginRequest.getPassword());
+        UserInfoData userext = new UserInfoData();
+        userext.setUsername(loginRequest.getUsername());
+        userext.setPassword(passwordTmp);
+        authService.register(userext);
         return new LoginResult(CommonCode.SUCCESS,"success");
     }
 
+    @RequestMapping(value = "/createImage")
+    @ResponseBody
+    public void createImage(@RequestParam String code, HttpServletResponse response, HttpSession session) throws IOException {
+        System.out.println("---------createImage----------");
+        ImageCode.createImage(response,session);
+    }
     //将令牌存储到cookie
     private void saveCookie(String token){
 

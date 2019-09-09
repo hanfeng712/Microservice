@@ -6,6 +6,8 @@ import com.gaoxi.gaoxicommonservicefacade.RedisService.RedisAuthService;
 import com.gaoxi.gaoxicommonservicefacade.common.auth.ext.AuthToken;
 import com.gaoxi.gaoxicommonservicefacade.common.auth.response.AuthCode;
 import com.gaoxi.gaoxicommonservicefacade.common.exception.ExceptionCast;
+import com.gaoxi.gaoxicommonservicefacade.model.UserInfoData;
+import com.gaoxi.gaoxicommonservicefacade.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -43,9 +45,14 @@ public class AuthService {
     StringRedisTemplate stringRedisTemplate;
     @Reference(version = "1.0.0", loadbalance = "roundrobin")
     private RedisAuthService redisAuthService;
-
+    @Reference(version = "1.0.0", loadbalance = "roundrobin")
+    private UserService userService;
     @Autowired
     RestTemplate restTemplate;
+
+    public int register(UserInfoData user){
+        return userService.insertSelective(user);
+    }
     //用户认证申请令牌，将令牌存储到redis
     public AuthToken login(String username, String password, String clientId, String clientSecret) {
 

@@ -29,4 +29,8 @@ public class UserServiceImpl implements UserService {
         System.out.println("==========================================");
         return userInfo.selectUserByAmount(username);
     }
+    @Override
+    public int insertSelective(UserInfoData user){
+        return userInfo.insertSelective(user);
+    }
 }

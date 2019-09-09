@@ -30,4 +30,11 @@ public class LoginRequest extends RequestData {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String getVerifycode(){
+        return verifycode;
+    }
+    public  void setVerifycode(String v){
+        this.verifycode = v;
+    }
 }

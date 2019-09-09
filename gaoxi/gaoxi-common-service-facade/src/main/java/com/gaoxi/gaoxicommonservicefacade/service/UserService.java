@@ -11,4 +11,5 @@ public interface UserService {
     public String login(String username);
     public UserInfoData selectUserByKey(int userid);
     public UserInfoData getUserByAmount(String username);
+    public int insertSelective(UserInfoData user);
 }
