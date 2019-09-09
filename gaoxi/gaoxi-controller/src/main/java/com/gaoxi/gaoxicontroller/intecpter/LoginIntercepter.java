@@ -1,15 +1,10 @@
 package com.gaoxi.gaoxicontroller.intecpter;
 
-import com.gaoxi.gaoxicommonservicefacade.common.utils.CookieUtil;
-
-import com.gaoxi.gaoxicommonservicefacade.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import com.gaoxi.gaoxicontroller.utils.AuthService;
@@ -33,21 +28,11 @@ public class LoginIntercepter implements HandlerInterceptor{
         if(StringUtils.isEmpty(tokenFromCookie)){
             //拒绝访问
             access_denied();
-            System.out.println("1111111111111111111111111111");
-            return false;
-        }
-        //从header中取jwt
-        String jwtFromHeader = authService.getJwtFromHeader(request);
-        if(StringUtils.isEmpty(jwtFromHeader)){
-            //拒绝访问
-            access_denied();
-            System.out.println("22222222222222222222");
             return false;
         }
         //从redis取出jwt的过期时间
         boolean expire1 = authService.getExpire(tokenFromCookie);
         if(expire1==false){
-            System.out.println("33333333333333333333333333");
             //拒绝访问
             access_denied();
             return false;

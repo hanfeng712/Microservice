@@ -75,6 +75,13 @@ public class AuthController extends AuthControllerApi {
 
         return new LoginResult(CommonCode.SUCCESS,access_token);
     }
+    @PostMapping("/userregister")
+    public LoginResult register(LoginRequest loginRequest) {
+        if(loginRequest == null || StringUtils.isEmpty(loginRequest.getUsername())){
+            ExceptionCast.cast(AuthCode.AUTH_USERNAME_NONE);
+        }
+        return new LoginResult(CommonCode.SUCCESS,"success");
+    }
 
     //将令牌存储到cookie
     private void saveCookie(String token){
