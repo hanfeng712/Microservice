@@ -12,4 +12,8 @@ public interface UserService {
     public UserInfoData selectUserByKey(int userid);
     public UserInfoData getUserByAmount(String username);
     public int insertSelective(UserInfoData user);
+    /**
+     * 修改头像
+     */
+    public  boolean photo(int userid,String url);
 }

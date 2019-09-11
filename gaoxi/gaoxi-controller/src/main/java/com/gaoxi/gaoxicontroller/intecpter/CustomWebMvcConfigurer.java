@@ -15,8 +15,11 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer  {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 
-        registry.addInterceptor(loginIntercepter).addPathPatterns("/**");
-        //.excludePathPatterns("/api2/xxx/**"); //拦截全部 /*/*/**
+        registry.addInterceptor(loginIntercepter).addPathPatterns("/**")
+                .excludePathPatterns("/swagger-resources/**")
+                .excludePathPatterns("/webjars/**")
+                .excludePathPatterns("/v2/**")
+                .excludePathPatterns("/swagger-ui.html/**"); //拦截全部 /*/*/**
 
         WebMvcConfigurer.super.addInterceptors(registry);
     }

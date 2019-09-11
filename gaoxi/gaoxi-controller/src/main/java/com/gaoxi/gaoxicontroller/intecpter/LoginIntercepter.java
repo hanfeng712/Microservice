@@ -21,8 +21,6 @@ public class LoginIntercepter implements HandlerInterceptor{
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response, Object handler) throws Exception {
         System.out.println("LoginIntercepter------->preHandle");
-        //BeanFactory factory = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
-        //this.authService = (AuthService) factory.getBean("AuthService");
         //取cookie中的身份令牌
         String tokenFromCookie = authService.getTokenFromCookie(request);
         if(StringUtils.isEmpty(tokenFromCookie)){

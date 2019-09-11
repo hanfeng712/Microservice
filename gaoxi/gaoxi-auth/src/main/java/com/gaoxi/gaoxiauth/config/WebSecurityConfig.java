@@ -18,7 +18,15 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/userlogin","/userlogout","/userjwt","/hello","/userregister","/createImage");
+        web.ignoring()
+                .antMatchers("/userlogin","/userlogout","/userjwt","/hello","/userregister","/createImage")
+                .antMatchers("/swagger-ui.html")
+                .antMatchers("/swagger-resources/**")
+                .antMatchers("/images/**")
+                .antMatchers("/webjars/**")
+                .antMatchers("/v2/api-docs")
+                .antMatchers("/configuration/ui")
+                .antMatchers("/configuration/security");
 
     }
     @Bean

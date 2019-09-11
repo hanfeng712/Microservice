@@ -33,4 +33,15 @@ public class UserServiceImpl implements UserService {
     public int insertSelective(UserInfoData user){
         return userInfo.insertSelective(user);
     }
+    /**
+     * 修改头像
+     */
+    @Override
+    public  boolean photo(int userid,String url){
+        UserInfoData user = new UserInfoData();
+        user.setUserid(userid);
+        user.setPhotourl(url);
+        int i = userInfo.updateByPrimaryKeySelective(user);
+        return i>0?true:false;
+    }
 }
